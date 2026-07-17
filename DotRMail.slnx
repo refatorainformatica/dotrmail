@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/DotRMail.Core/DotRMail.Core.csproj" />
+    <Project Path="src/DotRMail.Liquid/DotRMail.Liquid.csproj" />
+    <Project Path="src/DotRMail.Smtp/DotRMail.Smtp.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/DotRMail.Tests/DotRMail.Tests.csproj" />
+  </Folder>
+</Solution>

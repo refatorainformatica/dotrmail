@@ -1,0 +1,54 @@
+name: Publish NuGet
+
+on:
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: nuget-publish
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore DotRMail.slnx
+
+      - name: Build
+        run: dotnet build DotRMail.slnx --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test DotRMail.slnx --no-build --configuration Release --verbosity normal
+
+      - name: Pack
+        run: |
+          dotnet pack src/DotRMail.Core/DotRMail.Core.csproj --configuration Release --no-build --output ./artifacts
+          dotnet pack src/DotRMail.Liquid/DotRMail.Liquid.csproj --configuration Release --no-build --output ./artifacts
+          dotnet pack src/DotRMail.Smtp/DotRMail.Smtp.csproj --configuration Release --no-build --output ./artifacts
+
+      - name: List packages
+        run: ls -la ./artifacts
+
+      - name: NuGet login
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: RefatoraInformatica
+
+      - name: Publish to NuGet.org
+        run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
