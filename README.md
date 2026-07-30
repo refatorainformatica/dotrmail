@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="banner.jpg" alt="DotRMail — .NET Library · Email · Fluent API" width="100%" />
+</p>
+
 # DotRMail
 
 A .NET library for fluent email composition and delivery, inspired by [FluentEmail](https://github.com/lukencode/FluentEmail).
